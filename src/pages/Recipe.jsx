@@ -13,7 +13,7 @@ export default function Recipe() {
             axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`).then((data) => {
 
                 setRecipeDetails(data.data.meals[0])
-                console.log(data.data.meals[0]);
+
             })
         } catch (error) {
             console.log(error);
@@ -33,12 +33,20 @@ export default function Recipe() {
         }
     }
     const handleCollection = () => {
-        const user = {
-
+        let user = JSON.parse(localStorage.getItem('user'));
+        console.log(user);
+        const key = recipeDetails.idMeal;
+        const value = recipeDetails.strMeal;
+        if (user.savedRecipes) {
+            user.savedRecipes.push({ [key]: value })
         }
-        const obj = { name: id }
+        else {
+            let savedRecipes = [{ [key]: value }];
+            user = { ...user, savedRecipes };
+        }
+        localStorage.setItem('user', JSON.stringify(user))
+        console.log(user);
     }
-    console.log(measures);
     return (
         <div>
             <Header />

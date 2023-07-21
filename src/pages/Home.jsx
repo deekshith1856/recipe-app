@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Nav from 'react-bootstrap/Nav';
 import Item from '../components/Item';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 export default function Home() {
     const [searchQuery, SetSearchQuery] = useState('');
@@ -39,11 +38,10 @@ export default function Home() {
 
         axios.get(url).then((res) => {
 
-
             setItems(res.data.meals);
 
 
-        });
+        }).catch((err) => console.error(err));
         console.log(items);
 
 
@@ -60,12 +58,14 @@ export default function Home() {
                 </button>
             </div>
             <div style={cardContainerStyle}>
-                {items.map((item) => (
+                {!items ? <p>Cannot find {searchQuery}</p> : items.map((item) => (
                     <Item key={item.idMeal} recipe={item} onClick={handleRecipeClick} />
                 ))}
 
             </div>
 
         </div>
+
+
     )
 }

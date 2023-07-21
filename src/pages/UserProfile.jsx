@@ -1,9 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import { Button } from 'react-bootstrap';
+import { useAuthContext } from '../context/LoginProvider';
 
 export default function UserProfile() {
-    const savedRecipes = ['recipe 1', 'recipe 2', 'recipe 3',]
+    const { handleLogout } = useAuthContext()
+    const user = JSON.parse(localStorage.getItem('user'));
+    let savedRecipes = user.savedRecipes || [];
+    console.log(savedRecipes);
     const userCardStyle = {
         maxWidth: '300px',
         border: '2px solid #ccc',
@@ -41,11 +46,7 @@ export default function UserProfile() {
     };
 
     // Replace these with actual user details
-    const user = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        avatar: 'https://via.placeholder.com/100', // URL to user's avatar image
-    };
+
 
     return (<div >
         <Header />
@@ -58,15 +59,24 @@ export default function UserProfile() {
             <div style={userCardStyle}>
                 <h2>Saved Recipes</h2>
                 <ul style={recipeListStyle}>
-                    {savedRecipes.map((recipe, index) => (
+
+                    {savedRecipes.map((obj, index) => {
+                        const key = Object.keys(obj)[0];
+                        const value = Object.values(obj)[0];
+                        return (
                         <li key={index} style={recipeItemStyle}>
-                            <Link to={`/recipe/${encodeURIComponent(recipe)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                {recipe}
+                                <Link to={`/recipe/${encodeURIComponent(key)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    {value}
                             </Link>
                         </li>
-                    ))}
+                        )
+                    })}
                 </ul>
             </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+            <Button variant='danger' onClick={handleLogout}>Logout</Button>
         </div>
     </div>
     );
